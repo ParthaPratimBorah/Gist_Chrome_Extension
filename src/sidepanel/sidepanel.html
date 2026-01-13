@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summarizer</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Page Digest</h1>
+    </header>
+
+    <div class="control-group">
+      <label class="section-label">Summary Length</label>
+      <div class="toggle-container-3d">
+        <input type="radio" name="length" id="short" value="short" checked>
+        <label for="short" class="toggle-btn">Short</label>
+        
+        <input type="radio" name="length" id="medium" value="medium">
+        <label for="medium" class="toggle-btn">Medium</label>
+        
+        <input type="radio" name="length" id="detail" value="detail">
+        <label for="detail" class="toggle-btn">Deep</label>
+      </div>
+    </div>
+
+    <button id="summarizeBtn" class="action-btn-3d">
+      <span class="btn-text">Summarize Page</span>
+    </button>
+
+    <div class="output-wrapper">
+      <label class="section-label">Result</label>
+      <div id="outputContent" class="recessed-screen">
+        <p class="placeholder-text">Select text or click the button above...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/utils.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+:root {
+  /* "Normal Mode" Calming Blues Palette */
+  --bg-color: #E3F2FD;       
+  --surface-color: #BBDEFB;  
+  --primary-blue: #2196F3;   
+  --shadow-dark: #1565C0;    
+  --text-main: #0D47A1;      
+  --text-muted: #64B5F6;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 24px;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 1px 1px 0px #fff;
+}
+
+.section-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+/* 3D Segmented Control */
+.toggle-container-3d {
+  display: flex;
+  background: var(--surface-color);
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1),
+              inset -2px -2px 5px rgba(255,255,255,0.7);
+}
+
+.toggle-container-3d input { display: none; }
+
+.toggle-btn {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+  opacity: 0.6;
+}
+
+input:checked + .toggle-btn {
+  background-color: var(--bg-color);
+  opacity: 1;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1),
+              -2px -2px 5px rgba(255,255,255,0.8);
+  transform: scale(1.02);
+}
+
+/* Main 3D Action Button */
+.action-btn-3d {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: var(--primary-blue);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.1s ease;
+  box-shadow: 0px 6px 0px var(--shadow-dark), 
+              0px 6px 10px rgba(0,0,0,0.2);
+  transform: translateY(0);
+}
+
+.action-btn-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 0px var(--shadow-dark), 
+              0px 8px 15px rgba(0,0,0,0.25);
+}
+
+.action-btn-3d:active {
+  transform: translateY(4px);
+  box-shadow: 0px 2px 0px var(--shadow-dark), 
+              0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.action-btn-3d:disabled {
+  background: #90CAF9;
+  box-shadow: none;
+  transform: translateY(4px);
+  cursor: not-allowed;
+}
+
+/* Recessed Output Area */
+.output-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recessed-screen {
+  flex: 1;
+  background-color: #F1F8FF;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.1),
+              inset -3px -3px 8px rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.5);
+  user-select: text; /* Allow user to copy summary */
+}
+
+.placeholder-text {
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 40px;
+  font-style: italic;
+}
