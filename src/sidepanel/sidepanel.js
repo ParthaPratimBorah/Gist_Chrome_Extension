@@ -1,71 +1,93 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const summarizeBtn = document.getElementById('summarizeBtn');
+  const btnFullPage = document.getElementById('btnFullPage');
+  const btnSelection = document.getElementById('btnSelection');
+  const copyBtn = document.getElementById('copyBtn');
   const outputContent = document.getElementById('outputContent');
+  const loader = document.getElementById('loader');
+  const statusDot = document.getElementById('statusDot');
   const radioButtons = document.getElementsByName('length');
+  
+  let loadingTimer = null;
 
-  // 1. Handle "Summarize Page" Click
-  summarizeBtn.addEventListener('click', async () => {
+  // --- HANDLER: Summarize Full Page ---
+  btnFullPage.addEventListener('click', async () => {
+    handleSummarizeClick("summarize_full_page");
+  });
+
+  // --- HANDLER: Summarize Selection ---
+  btnSelection.addEventListener('click', async () => {
+    // We send a request to content script to "get_selection"
+    handleSummarizeClick("get_selection_request");
+  });
+
+  async function handleSummarizeClick(actionType) {
     let selectedLength = 'short';
     for (const radio of radioButtons) {
-      if (radio.checked) {
-        selectedLength = radio.value;
-        break;
-      }
+      if (radio.checked) selectedLength = radio.value;
     }
 
-    updateUIState('loading');
+    setLoading(true);
+
+    loadingTimer = setTimeout(() => {
+        setLoading(false);
+        outputContent.innerHTML = `<p style="color:red;">Timeout: API is slow. Try again.</p>`;
+    }, 60000);
 
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-    chrome.runtime.sendMessage({ 
-      action: "summarize_full_page", 
-      tabId: tab.id,
-      length: selectedLength 
-    }, (response) => {
-        if (chrome.runtime.lastError) {
-            updateUIState('error', "Error: Could not connect to page. Try refreshing the webpage.");
-        }
-    });
-  });
+    if (actionType === "summarize_full_page") {
+        // Tell Background -> Content -> Scrape Page
+        chrome.runtime.sendMessage({ 
+            action: "summarize_full_page", 
+            tabId: tab.id, 
+            length: selectedLength 
+        });
+    } else {
+        // Tell Content -> Get Selection
+        chrome.tabs.sendMessage(tab.id, { action: "get_selection" });
+        // We also save preference in background
+        chrome.runtime.sendMessage({ action: "save_pref", length: selectedLength });
+    }
+  }
 
-  // 2. Listen for Incoming Summaries
-  chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    // A. Trigger from Background/Content (Selected Text or Scraped Page)
-    if (message.action === "trigger_summary") {
+  // --- LISTEN FOR RESULTS ---
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "ui_loading") setLoading(true);
+    
+    if (message.action === "display_summary") {
+      clearTimeout(loadingTimer);
+      setLoading(false);
       
-      updateUIState('loading');
-      
-      let selectedLength = 'short';
-      for (const radio of radioButtons) {
-        if (radio.checked) selectedLength = radio.value;
-      }
-      
-      // Call the AI (from utils.js)
-      try {
-        const summaryText = await generateSummary(message.text, selectedLength);
-        
-        // Show result
-        updateUIState('success', summaryText);
-      } catch (err) {
-        updateUIState('error', "AI Error: " + err.message);
+      if (message.text.startsWith("Error")) {
+          outputContent.innerHTML = `<p style="color: #D32F2F;">${message.text}</p>`;
+          statusDot.classList.remove('active');
+      } else {
+          outputContent.innerHTML = message.text.replace(/\n/g, "<br>");
+          statusDot.classList.add('active');
       }
     }
   });
 
-  // Helper: Manage UI States
-  function updateUIState(state, text = "") {
-    if (state === 'loading') {
-      summarizeBtn.disabled = true;
-      summarizeBtn.querySelector('.btn-text').textContent = "Processing...";
-      outputContent.innerHTML = `<p style="color:var(--text-muted); text-align:center;">Analyzing content...</p>`;
-    } else if (state === 'success') {
-      summarizeBtn.disabled = false;
-      summarizeBtn.querySelector('.btn-text').textContent = "Summarize Page";
-      outputContent.innerHTML = `<p>${text}</p>`; 
-    } else if (state === 'error') {
-      summarizeBtn.disabled = false;
-      summarizeBtn.querySelector('.btn-text').textContent = "Summarize Page";
-      outputContent.innerHTML = `<p style="color:red;">${text}</p>`;
+  // Copy Button Logic
+  copyBtn.addEventListener('click', () => {
+    const text = outputContent.innerText;
+    if (text && !text.includes("Ready")) {
+      navigator.clipboard.writeText(text);
+      copyBtn.innerHTML = `<span class="material-icons-round" style="color:#10B981">check</span>`;
+      setTimeout(() => { copyBtn.innerHTML = `<span class="material-icons-round">content_copy</span>`; }, 2000);
+    }
+  });
+
+  function setLoading(isLoading) {
+    if (isLoading) {
+      loader.classList.remove('hidden');
+      btnFullPage.disabled = true;
+      btnSelection.disabled = true;
+      statusDot.classList.add('active');
+    } else {
+      loader.classList.add('hidden');
+      btnFullPage.disabled = false;
+      btnSelection.disabled = false;
     }
   }
 });
