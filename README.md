@@ -29,6 +29,12 @@ Designed with a calming blue interface and a neumorphic aesthetic, Gist helps yo
 
 ---
 
+## 🖼️ Screenshot
+
+![Gist Summarizer UI](icons\screenshot.png)
+
+---
+
 ## 🛠️ Installation & Setup
 
 ### 1. Clone the Repository
