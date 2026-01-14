@@ -31,7 +31,7 @@ Designed with a calming blue interface and a neumorphic aesthetic, Gist helps yo
 
 ## 🖼️ Screenshot
 
-![Gist Summarizer UI](icons\screenshot.png)
+![Gist Summarizer UI](https://raw.githubusercontent.com/ParthaPratimBorah/Gist_Chrome_Extension/refs/heads/main/icons/screenshot.png)
 
 ---
 
