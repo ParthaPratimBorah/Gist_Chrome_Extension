@@ -1,4 +1,4 @@
-# ✨ Gist – An AI Summarizer for Chrome
+# Gist – An AI Summarizer for Chrome
 
 **Gist** is a privacy-first Chrome Extension that cuts through the noise.  
 It uses advanced AI to instantly distill full web pages or highlighted text into clear, actionable bullet points.
@@ -31,7 +31,7 @@ Designed with a calming blue interface and a neumorphic aesthetic, Gist helps yo
 
 ## 🖼️ Screenshot
 
-![Gist Summarizer UI](https://raw.githubusercontent.com/ParthaPratimBorah/Gist_Chrome_Extension/refs/heads/main/icons/screenshot.png)
+![Gist Summarizer UI](https://raw.githubusercontent.com/ParthaPratimBorah/Gist_Chrome_Extension/refs/heads/main/icons/Screenshot.png)
 
 ---
 
